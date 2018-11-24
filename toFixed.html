@@ -1,0 +1,82 @@
+<script src="tinytest.js"></script>
+<script type="text/javascript">
+
+/* Shifts decimal point 'shift' places to the right. 
+
+  replicates number * 10^(shift)
+*/
+function shiftDecimal(number, shift) {
+  if (shift === 0) return number;
+
+  var numberString = number + '';
+  var newNumberStringSoFar = '';
+  var count = 0;
+  var decimalFound = false;
+
+  for (var i = 0; i < numberString.length; i++) {
+    if (numberString[i] !== '.') {
+      newNumberStringSoFar += numberString[i];
+      if (decimalFound) count++;
+      if (count === shift) newNumberStringSoFar += '.';
+    } else {
+      decimalFound = true;
+    }
+  }
+
+  if ((decimalFound && count < shift) || !decimalFound){
+    count = shift - count;
+    while(count) {
+      newNumberStringSoFar += '0';
+      count--;
+    }
+  }
+
+  return Number(newNumberStringSoFar);
+}
+
+function toFixed(number, precision) {
+  precision = precision || 0;
+  var power = Math.pow(10, precision);
+  return (Math.round(shiftDecimal(number, precision)) / power).toFixed(precision);
+}
+
+</script>
+<script>
+tests({
+  'shiftDecimal tests': function() {
+    // integer
+    eq(shiftDecimal(1, 0), 1);
+    eq(shiftDecimal(1, 1), 10);
+    eq(shiftDecimal(1, 2), 100);
+    eq(shiftDecimal(12, 2), 1200);
+    //fractional
+    eq(shiftDecimal(1.234, 0), 1.234);
+    eq(shiftDecimal(1.234, 1), 12.34);
+    eq(shiftDecimal(1.234, 2), 123.4);
+    eq(shiftDecimal(1.234, 3), 1234);
+    eq(shiftDecimal(1.234, 4), 12340);
+  },
+  'toFixed tests': function() {
+    // zero
+    eq(toFixed(0, 0), '0');
+    eq(toFixed(0, 2), '0.00');
+    // integer
+    eq(toFixed(1, 0), '1');
+    eq(toFixed(1, 2), '1.00');
+    // fractional
+    eq(toFixed(0.12, 0), '0');
+    eq(toFixed(0.12, 2), '0.12');
+    eq(toFixed(0.12, 3), '0.120');
+    eq(toFixed(1.23, 0), '1');
+    eq(toFixed(1.23, 2), '1.23');
+    eq(toFixed(1.23, 3), '1.230');
+    // problem numbers
+    eq(toFixed(0.615, 2), '0.62');
+    eq(toFixed(1.005, 2), '1.01');
+    eq(toFixed(10.235, 2), '10.24');
+  },
+});
+  
+</script>
+
+
