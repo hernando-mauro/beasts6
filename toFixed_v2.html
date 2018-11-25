@@ -1,0 +1,105 @@
+<script src="tinytest.js"></script>
+<script type="text/javascript">
+
+function toFixed(number, precision) {
+  precision = precision || 0;
+  var requiredShift = precision;
+  var numStr = number + '';
+  var numStrShift = '';
+  var numStrShiftRound = '';
+  var numStrShiftRoundDecimalized = '';
+  var characterCount = 0;
+  var decimalFound = false;
+  var leadingZero = false;
+  var zeroPadLength;
+  var negative = '';
+  
+  if (precision === 0) return Math.round(number) + '';
+
+  // store negative sign for later, deal with numbers as positive
+  if (numStr[0] === '-') {
+    negative = '-';
+    numStr = Math.abs(number) + '';
+  }
+    
+  // shifts decimal to right by 'precison' places
+  for (var i = 0; i < numStr.length; i++) {
+    if (numStr[i] !== '.') {
+      numStrShift += numStr[i];
+      if (decimalFound) characterCount++;
+      if (characterCount === requiredShift) numStrShift += '.';
+    } else {
+      decimalFound = true;
+    }
+
+  }
+
+  //pads zeros to end if required
+  if ((decimalFound && characterCount < requiredShift) || !decimalFound){
+    zeroPadLength = requiredShift - characterCount;
+    while(zeroPadLength) {
+      numStrShift += '0';
+      zeroPadLength--;
+    }
+
+  }
+
+  // perform rounding if not zero, add leading zero back if required
+  if (Number(numStrShift) === 0) {
+    numStrShiftRound = numStrShift; 
+  } else {
+    numStrShiftRound = (numStrShift[0] === '0') ? '0' + Math.round(Number(numStrShift)) : Math.round(Number(numStrShift)) + '';
+  }
+    
+  //insert decimal 'precision' places from end of string
+  characterCount = 0;
+  for (var i = 0; i < numStrShiftRound.length; i++) {
+    numStrShiftRoundDecimalized += numStrShiftRound[i];
+    characterCount++;
+    if (characterCount === (numStrShiftRound.length - precision)) numStrShiftRoundDecimalized += '.';
+  }
+  
+  return negative + numStrShiftRoundDecimalized;
+}
+
+
+</script>
+<script>
+tests({
+  'toFixed tests': function() {
+    // zero
+    eq(toFixed(0, 0), '0');
+    eq(toFixed(0, 2), '0.00');
+    // integer
+    eq(toFixed(1, 0), '1');
+    eq(toFixed(1, 2), '1.00');
+    // fractional
+    eq(toFixed(0.12, 0), '0');
+    eq(toFixed(0.12, 2), '0.12');
+    eq(toFixed(0.12, 3), '0.120');
+    eq(toFixed(1.23, 0), '1');
+    eq(toFixed(1.23, 2), '1.23');
+    eq(toFixed(1.23, 3), '1.230');
+    // problem numbers
+    eq(toFixed(0.615, 2), '0.62');
+    eq(toFixed(1.005, 2), '1.01');
+    eq(toFixed(10.235, 2), '10.24');
+    // negative zero
+    eq(toFixed(-0, 0), '0');
+    eq(toFixed(-0, 2), '0.00');
+    // negative integers
+    eq(toFixed(-1, 0), '-1');
+    eq(toFixed(-1, 2), '-1.00');
+    // negative fractionals
+    eq(toFixed(-0.12, 0), '0');
+    eq(toFixed(-0.12, 2), '-0.12');
+    eq(toFixed(-0.12, 3), '-0.120');
+    eq(toFixed(-1.23, 0), '-1');
+    eq(toFixed(-1.23, 2), '-1.23');
+    eq(toFixed(-1.23, 3), '-1.230');
+  },
+});
+  
+</script>
+
+
