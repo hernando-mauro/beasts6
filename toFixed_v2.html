@@ -27,7 +27,7 @@ function toFixed(number, precision) {
   // deal with numbers to be returned with a precision of zero, i.e integers
   if (precision === 0) {
     numAbsoluteRound = Math.round(Math.abs(number));
-    negative = (numAbsoluteRound === 0) ? '' : negative;
+    if (numAbsoluteRound === 0) negative = '';
     return negative + numAbsoluteRound;
   }
     
