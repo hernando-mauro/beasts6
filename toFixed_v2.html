@@ -2,21 +2,22 @@
 <script type="text/javascript">
 
 function toFixed(number, precision) {
-  precision = precision || 0;
-  var requiredShift = precision;
   var numStr = Math.abs(number) + '';
-  var numStrShift = '';
   var numStrShiftRound = '';
   var numStrShiftRoundDecimalized = '';
-  var charCount = 0;
-  var decimalFound = false;
   var leadingZero = false;
+  var requiredShift;
+  var numStrShift;
+  var charCount;
+  var decimalFound;
   var zeroPadLength;
   var shiftedNumber;
   var charBeforeDecimal;
   var i;
   var numberAsPosInteger;
   var negative;
+  
+  precision = precision || 0;
   
   // store negative sign if present, process numbers as postives for ease and to round correctly
   negative = (number.toString()[0] === '-') ? '-' : '';
@@ -29,6 +30,11 @@ function toFixed(number, precision) {
   }
     
   // shifts decimal to right by required shift
+  requiredShift = precision;
+  decimalFound = false;
+  charCount = 0;
+  numStrShift = '';
+    
   for (i = 0; i < numStr.length; i++) {
     if (numStr[i] !== '.') {
       numStrShift += numStr[i];
