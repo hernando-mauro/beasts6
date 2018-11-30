@@ -15,7 +15,7 @@ function toFixed(number, precision) {
   var shiftedNumber;
   var charBeforeDecimal;
   var i;
-  var numberAsInteger;
+  var numberAsPosInteger;
   var negative;
   
   // store negative sign if present, process numbers as postives for ease and to round correctly
@@ -23,9 +23,9 @@ function toFixed(number, precision) {
 
   // deal with numbers to be returned with a precision of zero, i.e integers
   if (precision === 0) {
-    numberAsInteger = Math.round(Number(numStr));
-    if (numberAsInteger === 0) negative = '';
-    return negative + numberAsInteger;
+    numberAsPosInteger = Math.round(Number(numStr));
+    if (numberAsPosInteger === 0) negative = '';
+    return negative + numberAsPosInteger;
   }
     
   // shifts decimal to right by required shift
