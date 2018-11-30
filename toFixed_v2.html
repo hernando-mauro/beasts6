@@ -16,13 +16,13 @@ function toFixed(number, precision) {
   var i;
   var numberAsPosInteger;
   var negative;
-  
-  precision = precision || 0;
-  
+    
   // store negative sign if present, process numbers as postives for ease and to round correctly
   negative = (number.toString()[0] === '-') ? '-' : '';
 
   // deal with numbers to be returned with a precision of zero, i.e integers
+  precision = precision || 0;
+  
   if (precision === 0) {
     numberAsPosInteger = Math.round(Number(numStr));
     if (numberAsPosInteger === 0) negative = '';
